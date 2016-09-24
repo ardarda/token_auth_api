@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2016-09-23 20:31:53
+  worker: one
+  work: one
+  piece_rate: 
+
+two:
+  date: 2016-09-23 20:31:53
+  worker: two
+  work: two
+  piece_rate: 

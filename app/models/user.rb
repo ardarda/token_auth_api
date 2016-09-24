@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
           #:confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
-
+  has_many :works
   has_many :books
+  has_many :employers
   
 end

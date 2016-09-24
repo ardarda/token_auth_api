@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160916221614) do
+ActiveRecord::Schema.define(version: 20160924103316) do
 
   create_table "books", force: :cascade do |t|
     t.string   "name"
@@ -19,6 +19,14 @@ ActiveRecord::Schema.define(version: 20160916221614) do
     t.datetime "updated_at", null: false
     t.integer  "user_id"
     t.index ["user_id"], name: "index_books_on_user_id"
+  end
+
+  create_table "employers", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_employers_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -47,6 +55,39 @@ ActiveRecord::Schema.define(version: 20160916221614) do
     t.index ["email"], name: "index_users_on_email"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
+  end
+
+  create_table "work_pieces", force: :cascade do |t|
+    t.datetime "date"
+    t.integer  "worker_id"
+    t.integer  "work_id"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.decimal  "piece_rate", precision: 8, scale: 2
+    t.boolean  "is_paid"
+    t.index ["work_id"], name: "index_work_pieces_on_work_id"
+    t.index ["worker_id"], name: "index_work_pieces_on_worker_id"
+  end
+
+  create_table "workers", force: :cascade do |t|
+    t.string   "name"
+    t.string   "phone"
+    t.string   "email"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_workers_on_user_id"
+  end
+
+  create_table "works", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.integer  "employer_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "address"
+    t.index ["employer_id"], name: "index_works_on_employer_id"
+    t.index ["user_id"], name: "index_works_on_user_id"
   end
 
 end
