@@ -7,10 +7,23 @@ class WorkPiecesController < ApplicationController
     # @work_pieces = WorkPiece.all
 
     # render json: @work_pieces
-    work_pieces_of_worker = WorkPiece.where(worker_id: params[:worker_id])
-    render json: work_pieces_of_worker
+    work_pieces = WorkPiece.where(worker_id: params[:worker_id])
+    if (work_pieces)
+      render json: work_pieces
+    else
+      render json: work_pieces.errors, status: :unprocessable_entity
+    end
   end
 
+def indexWithWork
+  work_pieces = WorkPiece.where(work_id: params[:work_id])
+  if (work_pieces)
+    render json: work_pieces
+  else
+    render json: work_pieces.errors, status: :unprocessable_entity
+  end
+  
+end
   # GET /work_pieces/1
   def show
     render json: @work_piece
@@ -49,10 +62,10 @@ class WorkPiecesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def work_piece_params
-      params.require(:work_piece).permit(:date, :worker_id, :work_id, :piece_rate)
+      params.require(:work_piece).permit(:date, :worker_id, :work_id, :piece_rate, :is_paid)
     end
 
-    def workers_work_pieces_params
+    def work_pieces_params
       params.require(:worker).permit(:id)
     end
 
