@@ -18,9 +18,8 @@ class WorkersController < ApplicationController
 
   # POST /workers
   def create
-    worker_params_with_user_id = worker_params.push(current_user)
-    @worker = Worker.new(worker_params_with_user_id)
-
+    @worker = Worker.new(worker_params)
+    @worker.user = current_user
     if @worker.save
       render json: @worker, status: :created, location: @worker
     else
