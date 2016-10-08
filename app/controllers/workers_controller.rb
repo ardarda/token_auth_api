@@ -18,7 +18,8 @@ class WorkersController < ApplicationController
 
   # POST /workers
   def create
-    @worker = Worker.new(worker_params)
+    worker_params_with_user_id = worker_params.push(current_user)
+    @worker = Worker.new(worker_params_with_user_id)
 
     if @worker.save
       render json: @worker, status: :created, location: @worker
@@ -49,6 +50,6 @@ class WorkersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def worker_params
-      params.require(:worker).permit(:name, :phone, :email, :user_id)
+      params.require(:worker).permit(:name, :phone, :email)
     end
 end
