@@ -21,7 +21,7 @@ class EmployersController < ApplicationController
   # POST /employers
   def create
     @employer = Employer.new(employer_params)
-
+    @employer.user = current_user
     if @employer.save
       render json: @employer, status: :created, location: @employer
     else
@@ -51,6 +51,6 @@ class EmployersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def employer_params
-      params.require(:employer).permit(:name, :user_id)
+      params.require(:employer).permit(:name)
     end
 end
