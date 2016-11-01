@@ -33,6 +33,8 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   gem 'sqlite3'
+  gem 'rspec-rails', '~> 3.5'
+
 end
 
 group :development do
@@ -43,4 +45,11 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Want to run against the master branch? You'll need to include the dependent RSpec repos as well. Add the following to your Gemfile:
+
+
+# gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+# %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
+#   gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
+# end

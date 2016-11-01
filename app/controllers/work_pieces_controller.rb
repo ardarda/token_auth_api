@@ -34,7 +34,13 @@ end
     @work_piece = WorkPiece.new(work_piece_params)
 
     if @work_piece.save
-      render json: @work_piece, status: :created, location: @work_piece
+      expense = Expense.new(rate: @work_piece.piece_rate, work_piece: @work_piece, transaction_completed: @work_piece.is_paid, user: current_user)
+      expense.work_id = @work_piece.work_id
+      if expense.save
+              render json: @work_piece, status: :created, location: @work_piece
+      else
+              render json: expense.errors, status: :unprocessable_entity
+      end
     else
       render json: @work_piece.errors, status: :unprocessable_entity
     end

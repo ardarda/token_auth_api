@@ -21,7 +21,7 @@ class WorksController < ApplicationController
   # POST /works
   def create
     @work = Work.new(work_params)
-
+    @work.user = current_user
     if @work.save
       render json: @work, status: :created, location: @work
     else
@@ -51,6 +51,6 @@ class WorksController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def work_params
-      params.require(:work).permit(:name, :user_id, :employer_id, :address)
+      params.require(:work).permit(:name, :employer_id, :address)
     end
 end
