@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161101090922) do
+ActiveRecord::Schema.define(version: 20161107220634) do
+
+  create_table "balances", force: :cascade do |t|
+    t.decimal  "Difference",    precision: 8, scale: 2
+    t.decimal  "TotalIncome",   precision: 8, scale: 2
+    t.decimal  "TotalExpenses", precision: 8, scale: 2
+    t.integer  "user_id"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.index ["user_id"], name: "index_balances_on_user_id"
+  end
 
   create_table "books", force: :cascade do |t|
     t.string   "name"
@@ -40,6 +50,19 @@ ActiveRecord::Schema.define(version: 20161101090922) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
     t.index ["work_id"], name: "index_expenses_on_work_id"
     t.index ["work_piece_id"], name: "index_expenses_on_work_piece_id"
+  end
+
+  create_table "incomes", force: :cascade do |t|
+    t.decimal  "rate",                  precision: 8, scale: 2
+    t.integer  "work_id"
+    t.integer  "employer_id"
+    t.integer  "user_id"
+    t.boolean  "transaction_completed"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.index ["employer_id"], name: "index_incomes_on_employer_id"
+    t.index ["user_id"], name: "index_incomes_on_user_id"
+    t.index ["work_id"], name: "index_incomes_on_work_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -96,9 +119,10 @@ ActiveRecord::Schema.define(version: 20161101090922) do
     t.string   "name"
     t.integer  "user_id"
     t.integer  "employer_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.string   "address"
+    t.decimal  "price",       precision: 8, scale: 2
     t.index ["employer_id"], name: "index_works_on_employer_id"
     t.index ["user_id"], name: "index_works_on_user_id"
   end

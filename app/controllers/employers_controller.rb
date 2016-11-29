@@ -1,3 +1,4 @@
+
 class EmployersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_employer, only: [:show, :update, :destroy]
@@ -5,10 +6,7 @@ class EmployersController < ApplicationController
   # GET /employers
   def index
     # @employers = Employer.all
-
     # render json: @employers
-
-
       employers_of_current_user = Employer.where(user: current_user)
       render json: employers_of_current_user
   end

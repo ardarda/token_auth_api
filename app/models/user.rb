@@ -8,5 +8,7 @@ class User < ActiveRecord::Base
   has_many :works
   has_many :books
   has_many :employers
+
+  has_one :balance
   
 end

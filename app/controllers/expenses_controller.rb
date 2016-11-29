@@ -19,6 +19,9 @@ class ExpensesController < ApplicationController
     @expense = Expense.new(expense_params)
     expense.user = current_user
     if @expense.save
+      # # add to balance
+      # current_user.balance.remove_money(@expense.rate)
+      
       render json: @expense, status: :created, location: @expense
     else
       render json: @expense.errors, status: :unprocessable_entity

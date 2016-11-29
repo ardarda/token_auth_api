@@ -37,6 +37,27 @@ end
       expense = Expense.new(rate: @work_piece.piece_rate, work_piece: @work_piece, transaction_completed: @work_piece.is_paid, user: current_user)
       expense.work_id = @work_piece.work_id
       if expense.save
+        logger.debug "Expense attributes hash: #{expense.attributes.inspect} EXPENSE SAVED!!!!"
+        # reduce from balance
+        balance = Balance.where(user: current_user).first
+        # logger.debug "balance hash: #{balance.attributes.inspect}"
+
+        logger.debug "#{balance.attributes}"
+
+
+        balance.TotalExpenses += expense.rate.to_f
+
+        if balance.save
+        else
+          logger.debug "cant save balance"
+        end
+
+
+        # if balance.remove_money(expense.rate)
+        #   logger.debug "balance hash: #{balance.attributes.inspect}"
+        # else
+        #   logger.debug "balance does not respond call"
+        # end
               render json: @work_piece, status: :created, location: @work_piece
       else
               render json: expense.errors, status: :unprocessable_entity
