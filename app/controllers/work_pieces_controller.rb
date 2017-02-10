@@ -1,3 +1,7 @@
+
+require 'bigdecimal'
+require 'bigdecimal/util'
+
 class WorkPiecesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_work_piece, only: [:show, :update, :destroy]
@@ -15,15 +19,15 @@ class WorkPiecesController < ApplicationController
     end
   end
 
-def indexWithWork
-  work_pieces = WorkPiece.where(work_id: params[:work_id])
-  if (work_pieces)
-    render json: work_pieces
-  else
-    render json: work_pieces.errors, status: :unprocessable_entity
+  def indexWithWork
+    work_pieces = WorkPiece.where(work_id: params[:work_id])
+    if (work_pieces)
+      render json: work_pieces
+    else
+      render json: work_pieces.errors, status: :unprocessable_entity
+    end
+    
   end
-  
-end
   # GET /work_pieces/1
   def show
     render json: @work_piece
@@ -40,8 +44,13 @@ end
         logger.debug "Expense attributes hash: #{expense.attributes.inspect} EXPENSE SAVED!!!!"
         # reduce from balance
         balance = Balance.where(user: current_user).first
-        # logger.debug "balance hash: #{balance.attributes.inspect}"
 
+        if expense.work_piece.is_paid
+          expense.transaction_completed = true
+          balance.total_paid_expenses += expense.rate
+        end
+        # logger.debug "balance hash: #{balance.attributes.inspect}"
+        balance.total_paid_expenses 
         logger.debug "#{balance.attributes}"
 
 
@@ -69,7 +78,25 @@ end
 
   # PATCH/PUT /work_pieces/1
   def update
+
+    paid_status_updated = (@work_piece.is_paid != work_piece_params[:is_paid])
     if @work_piece.update(work_piece_params)
+      if paid_status_updated 
+        expense = Expense.find_by(work_piece_id: @work_piece.id)
+        expense.transaction_completed = @work_piece.is_paid
+        expense.save
+
+        balance = Balance.find_by(user_id: current_user.id)
+
+        if expense.work_piece.is_paid
+         balance.total_paid_expenses += expense.rate.to_f
+        else
+          if balance.total_paid_expenses.to_f > 0
+            balance.total_paid_expenses -= expense.rate.to_f
+          end
+        end
+        balance.save
+      end
       render json: @work_piece
     else
       render json: @work_piece.errors, status: :unprocessable_entity
@@ -95,5 +122,7 @@ end
     def work_pieces_params
       params.require(:worker).permit(:id)
     end
-
+    def work_pieces_of_work_params
+      params.require(:work).permit(:id)
+    end
 end
